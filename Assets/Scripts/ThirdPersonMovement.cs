@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class ThirdPersonMovement : MonoBehaviour
 {
+    enum PlayerMovement {Walking, Charging, Gliding, Flying};
+    public enum Attacking {None, Fire, Charging};
+
+    public static bool playerAttack; //if the player hit the attack button
     //variables for basic movement 
     public CharacterController controller; //controls the character's movement
     public Transform cam; //main camera
@@ -24,14 +28,34 @@ public class ThirdPersonMovement : MonoBehaviour
     bool isGrounded; //player is grounded or not
     public float jumpHeight = 3f; //how high the player can jump
 
+    PlayerMovement playerMovement;
+    public static Attacking attacking;
+
     private void Start()
     {
         originalSpeed = speed;
+        playerMovement = PlayerMovement.Walking;
+        attacking = Attacking.None;
+        playerAttack = false; //set the player to not attacking at first
     }
 
     void Update()
     {
         Movement();
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            attacking = Attacking.Fire;
+            playerAttack = true;
+        }
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(playerMovement == PlayerMovement.Charging)
+        {
+            attacking = Attacking.Charging;
+            playerAttack = true;
+        }
     }
 
     private void Movement()
@@ -47,10 +71,14 @@ public class ThirdPersonMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && isGrounded)
         {
             speed *= 2;
+            playerMovement = PlayerMovement.Charging;
+            attacking = Attacking.Charging;
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift) && isGrounded)
         {
             speed = originalSpeed;
+            playerMovement = PlayerMovement.Walking;
+            attacking = Attacking.None;
         }
 
         //moving

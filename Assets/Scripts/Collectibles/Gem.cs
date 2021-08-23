@@ -48,7 +48,8 @@ public class Gem : MonoBehaviour
         if(trailParticle != null)
             trailParticle.SetActive(false);
         firstPos = transform.position; //original position
-        sparxDestination = GameObject.Find("Red Gems/Red Gem/Sparx Destination").transform.position; //where the sparx destination is located
+        //sparxDestination = GameObject.Find("Red Gems/Red Gem/Sparx Destination").transform.position; //where the sparx destination is located
+        sparxDestination = this.transform.position; //find out how to set to "Sparx destination"
     }
     private void OnTriggerEnter(Collider other)
     {

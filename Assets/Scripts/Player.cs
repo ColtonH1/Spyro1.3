@@ -17,7 +17,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     //Finding a gem and attacking
-    public static bool playerAttack; //if the player hit the attack button
+    //public static bool playerAttack; //if the player hit the attack button
     GameObject sparx; //Sparx's game object
     public bool gemFound; //if the gem was found
     public int gemCount;
@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     {
         sparx = GameObject.Find("Player/Sparx"); //find Sparx's game object
         Debug.Log("We found " + sparx.name);
-        playerAttack = false; //set the player to not attacking at first
+        //playerAttack = false; //set the player to not attacking at first
         gemFound = false; //set to no gems being found at first
         sparxDestination = GameObject.Find("Player/Sparx Destination");
     }
@@ -41,10 +41,10 @@ public class Player : MonoBehaviour
     void Update()
     {
         //if the player hits the attack button, then set attack to true so PlayerAttack script can be active
-        if (Input.GetKeyDown(KeyCode.Q))
+        /*if (Input.GetKeyDown(KeyCode.Q))
         {
             playerAttack = true;
-        }
+        }*/
     }
 
     private void OnTriggerEnter(Collider other)
@@ -64,6 +64,13 @@ public class Player : MonoBehaviour
                 Debug.Log("Health gained");
                 CharacterStats health = GetComponent<CharacterStats>();
                 health.AddHealth();
+                other.gameObject.SetActive(false);
+                break;
+
+            case "Key":
+                Debug.Log("Key has been found");
+                CharacterStats key = GetComponent<CharacterStats>();
+                key.AddKey();
                 other.gameObject.SetActive(false);
                 break;
 

@@ -1,3 +1,13 @@
+/*
+ * This script is made by Colton Henderson
+ * This script describes how the player attacks
+ * There are functions for:
+ *      When the player presses the attack button
+ *      How to give damage
+ *      Start and stop the fire breath
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,6 +15,7 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+    //enum Attacking {Fire, Charging};
     public GameObject fireBreath; //prefab to instantiate
     public GameObject fireBreathLocation; //where to spawn
     public int flameDamage = 1;
@@ -25,25 +36,42 @@ public class PlayerAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if player is set to attacking
-        if(Player.playerAttack && Time.time > nextFire)
+        Debug.Log("ThirdPersonMovement.attacking is " + ThirdPersonMovement.attacking);
+        //if player is set to attacking with fire
+        if((ThirdPersonMovement.attacking == ThirdPersonMovement.Attacking.Fire) && ThirdPersonMovement.playerAttack && Time.time > nextFire)
         {
-            Attack();
+            FireAttack();
         }
+        //if player is attacking by charging
+        else if((ThirdPersonMovement.attacking == ThirdPersonMovement.Attacking.Charging) && ThirdPersonMovement.playerAttack && Time.time > nextFire)
+        {
+            ChargeAttack();
+        }
+        //else, there is no attack
         else
         {
-            Player.playerAttack = false;
+            ThirdPersonMovement.playerAttack = false;
         }
     }
 
-    public void Attack()
+    private void ChargeAttack()
+    {
+        nextFire = Time.time + fireRate;
+        GiveDamage();
+
+        Debug.Log("Charge Attacking");
+    }
+
+    public void FireAttack()
     {
         nextFire = Time.time + fireRate;
         Fire();
 
         GiveDamage();
 
-        Debug.Log("Attacking");
+        ThirdPersonMovement.attacking = ThirdPersonMovement.Attacking.None;
+
+        Debug.Log("Fire Attacking");
     }
 
     private void GiveDamage()
@@ -68,7 +96,7 @@ public class PlayerAttack : MonoBehaviour
         GameObject fireBreathGO = Instantiate(fireBreath, new Vector3(fireBreathLocation.transform.position.x, fireBreathLocation.transform.position.y, fireBreathLocation.transform.position.z), Quaternion.Euler(90, 0, 0));
         fireBreathGO.transform.parent = gameObject.transform; //set the parent
         fireBreathGO.transform.localScale = new Vector3(1, 1, 1); //set the scale
-        Player.playerAttack = false; //tell thirdperson movement we are no longer attacking
+        ThirdPersonMovement.playerAttack = false; //tell thirdperson movement we are no longer attacking
         StartCoroutine(EndFireBreath(fireBreathGO, 5)); //wait 5 seconds before deleting
     }
 

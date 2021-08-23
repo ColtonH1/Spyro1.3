@@ -14,10 +14,12 @@ public class CharacterStats : MonoBehaviour
 {
     public int maxHealth = 4;
     public int currentHealth { get; private set; }
+    public bool key;
 
     private void Awake()
     {
         currentHealth = maxHealth;
+        key = false;
     }
 
     private void Update()
@@ -34,7 +36,10 @@ public class CharacterStats : MonoBehaviour
         Debug.Log(transform.name + " takes 1 damage.");
         if(currentHealth <= 0)
         {
-            Die();
+            if (ThirdPersonMovement.attacking == ThirdPersonMovement.Attacking.Charging)
+                Die(true, key);
+            else
+                Die(false, key);
         }
         if(currentHealth < 0)
         {
@@ -51,8 +56,14 @@ public class CharacterStats : MonoBehaviour
             currentHealth = maxHealth;
         }
     }
+
+    public void AddKey()
+    {
+        key = true;
+        Die(false, key);
+    }
     
-    public virtual void Die()
+    public virtual void Die(bool charging, bool key)
     {
         //Die
         //This method is meant to be overwritten
