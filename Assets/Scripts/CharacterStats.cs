@@ -30,6 +30,15 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player" && other.gameObject.GetComponent<CharacterStats>().key)
+        {
+            Debug.Log("Safe died! and player has key == " + other.gameObject.GetComponent<CharacterStats>().key);
+            Die(false, other.gameObject.GetComponent<CharacterStats>().key);
+        }
+    }
+
     public void TakeDamage()
     {
         currentHealth -= 1;
@@ -60,7 +69,6 @@ public class CharacterStats : MonoBehaviour
     public void AddKey()
     {
         key = true;
-        Die(false, key);
     }
     
     public virtual void Die(bool charging, bool key)

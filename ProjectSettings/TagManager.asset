@@ -10,6 +10,7 @@ TagManager:
   - Basket
   - Enemy
   - Key
+  - Safe
   layers:
   - Default
   - TransparentFX

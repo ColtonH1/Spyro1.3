@@ -14,15 +14,17 @@ public class Safe : CharacterStats
 
     public override void Die(bool charging, bool key)
     {
-        if ((charging && !charging) || key)
+        Debug.Log("In the Safe Die()" + key);
+        if (key)
         {
             for (int i = 0; i < transform.childCount; i++)
             {
+                Debug.Log("Child " + i + " is unlocked");
                 transform.GetChild(i).gameObject.SetActive(true);
                 StartCoroutine(SetChildTag(i, .25f)); //wait .25 seconds before setting gem
             }
         }
-        base.Die(charging, key);
+        //base.Die(charging, key);
     }
 
     private IEnumerator SetChildTag(int i, float waitTime)
